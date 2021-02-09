@@ -108,7 +108,7 @@ class ML_model():
         for i in range(n_epochs + 1):
             self.train_epoch(i, self.trainLoader, self.model, self.criterion, optimizer, train_logger, train_batch_logger)
 
-            validation_loss,confusion_matrix,_ = self.val_epoch(i, self.valLoader, model, criterion, opt, val_logger)
+            validation_loss,confusion_matrix,_ = self.val_epoch(i, self.valLoader, self.model, self.criterion, val_logger)
 
             confusion_matrix_file = os.path.join(self.args.Results_directory,'epoch_{epoch}_confusion_matrix.csv'.format(epoch=i))
             confusion_matrix.to_csv(confusion_matrix_file)
