@@ -1,6 +1,7 @@
-import os, random, torch, time
+import os, random, torch, time, pdb
 
 import pandas as pd
+import numpy as np
 
 from torch import nn
 from torch import optim
@@ -34,7 +35,8 @@ class ML_model():
     def __init__(self, results_directory, clips_directory, labeled_clips_file, xy_crop, t_crop, t_interval, n_classes):
         self.results_directory = results_directory
         self.clips_directory = clips_directory
-        self.clips_dt = pd.read_csv(labeled_clips_file)
+        self.clips_dt = pd.read_csv(labeled_clips_file).head(200)
+        pdb.set_trace()
         self.xy_crop = xy_crop
         self.t_crop = t_crop
         self.t_interval = t_interval
