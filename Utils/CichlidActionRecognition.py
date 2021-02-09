@@ -36,7 +36,6 @@ class ML_model():
         self.results_directory = results_directory
         self.clips_directory = clips_directory
         self.clips_dt = pd.read_csv(labeled_clips_file).head(200)
-        pdb.set_trace()
         self.xy_crop = xy_crop
         self.t_crop = t_crop
         self.t_interval = t_interval
