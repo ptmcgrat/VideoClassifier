@@ -51,11 +51,11 @@ class ML_model():
                 sample_size=self.xy_crop,
                 sample_duration=self.t_size)
 
-        #self.model = self.model.cuda()
+        self.model = self.model.cuda()
         self.model = nn.DataParallel(self.model, device_ids=None)
         self.parameters = self.model.parameters()
         self.criterion = nn.CrossEntropyLoss()
-        #self.criterion = self.criterion.cuda()
+        self.criterion = self.criterion.cuda()
 
     def splitData(self, analysis_type):
         print('Splitting Data')
