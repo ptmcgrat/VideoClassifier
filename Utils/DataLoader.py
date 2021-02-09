@@ -58,7 +58,7 @@ class JPGLoader(data.Dataset):
             except:
                 continue
             cmd = ['ffmpeg','-i', self.data_folder + mp4file, self.data_folder + mp4file.replace('.mp4','') + '/image_%05d.jpg']
-            output = subprocess.run(cmd, capture_output = True)
+            output = subprocess.run(cmd, stdout = None, stderr = None)
 
         print('Cant find ' + str(len(self.dt[self.dt.VideoExists == False])) + ' videos.')
         self.dt = self.dt[self.dt.VideoExists == True]
@@ -111,35 +111,3 @@ class JPGLoader(data.Dataset):
                     video.append(img.convert('RGB'))
         return self.transforms[projectID](video), self.target_transform.index(label)
 
-"""
-dt = pd.read_csv('Test.csv')
-dt['MeanR'] = np.nan
-dt['MeanG'] = np.nan
-dt['MeanB'] = np.nan
-dt['StdR'] = np.nan
-dt['StdG'] = np.nan
-dt['StdB'] = np.nan
-
-image_path = os.path.join('0001_vid__3747__505__4955__606__221', 'image_00001.jpg')
-with open(image_path, 'rb') as f:
-    with Image.open(f) as img:
-        img = img.convert('RGB')
-
-for index, row in dt.iterrows():
-    means = np.mean(img, axis = (0,1))
-    dt.at[index,'MeanR'] = np.mean(img, axis = (0,1))[0]
-    dt.at[index,'MeanG'] = np.mean(img, axis = (0,1))[1]
-    dt.at[index,'MeanB'] = np.mean(img, axis = (0,1))[2]
-
-    stds = np.std(img, axis = (0,1))
-    dt.at[index,'StdR'] = np.std(img, axis = (0,1))[0]
-    dt.at[index,'StdG'] = np.std(img, axis = (0,1))[1]
-    dt.at[index,'StdB'] = np.std(img, axis = (0,1))[2]
-
-project_dt = dt.groupby('MeanID').mean()
-project_dict = {}
-for index,row in project_dt.iterrows():
-    project_dict[index] = [np.array(row[0:3]),np.array(row[4:7])]
-
-pdb.set_trace()
-"""
