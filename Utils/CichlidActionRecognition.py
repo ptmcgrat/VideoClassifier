@@ -129,7 +129,7 @@ class ML_model():
         accuracies = AverageMeter()
 
         end_time = time.time()
-        for i, (inputs, targets) in enumerate(data_loader):
+        for i, (inputs, targets, paths) in enumerate(data_loader):
             data_time.update(time.time() - end_time)
 
             targets = targets.cuda(non_blocking=True)
@@ -203,7 +203,7 @@ class ML_model():
         ###########################################################################
 
         # pdb.set_trace()
-        for i, (inputs, targets,paths) in enumerate(data_loader):
+        for i, (inputs, targets, paths) in enumerate(data_loader):
             data_time.update(time.time() - end_time)
 
             targets = targets.cuda(non_blocking=True)
