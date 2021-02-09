@@ -108,14 +108,14 @@ class ML_model():
         for i in range(n_epochs + 1):
             self.train_epoch(i, self.trainLoader, self.model, self.criterion, optimizer, train_logger, train_batch_logger)
 
-            validation_loss,confusion_matrix,_ = self.val_epoch(i, val_loader, model, criterion, opt, val_logger)
+            validation_loss,confusion_matrix,_ = self.val_epoch(i, self.valLoader, model, criterion, opt, val_logger)
 
             confusion_matrix_file = os.path.join(self.args.Results_directory,'epoch_{epoch}_confusion_matrix.csv'.format(epoch=i))
             confusion_matrix.to_csv(confusion_matrix_file)
 
             scheduler.step(validation_loss)
-            if i % 5 == 0 and len(test_data) != 0:
-                _ = self.val_epoch(i, test_loader, model, criterion, opt, test_logger)
+            #if i % 5 == 0 and len(test_data) != 0:
+            #   _ = self.val_epoch(i, test_loader, model, criterion, opt, test_logger)
 
     def train_epoch(self, epoch, data_loader, model, criterion, optimizer,
                     epoch_logger, batch_logger):
