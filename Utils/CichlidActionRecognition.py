@@ -128,7 +128,7 @@ class ML_model():
         accuracies = AverageMeter()
 
         end_time = time.time()
-        for i, (inputs, targets,_) in enumerate(data_loader):
+        for i, (inputs, targets) in enumerate(data_loader):
             data_time.update(time.time() - end_time)
 
             targets = targets.cuda(non_blocking=True)
