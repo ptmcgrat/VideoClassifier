@@ -60,7 +60,6 @@ class JPGLoader(data.Dataset):
             if os.path.exists(self.data_folder + mp4file.replace('.mp4','') + '/image_00001.jpg'):
                 self.dt.at[i,'VideoExists'] = True
 
-        pdb.set_trace()
         print('Cant find ' + str(len(self.dt[self.dt.VideoExists == False])) + ' videos.')
         self.dt = self.dt[self.dt.VideoExists == True]
         self.dt = self.dt.reset_index()
@@ -107,7 +106,7 @@ class JPGLoader(data.Dataset):
 
         video = []
         for i in range(num_images):
-            with open(os.path.join(video_path, 'image_{:05d}.jpg'.format(index)), 'rb') as f:
+            with open(os.path.join(video_path, 'image_{:05d}.jpg'.format(i)), 'rb') as f:
                 with Image.open(f) as img:
                     video.append(img.convert('RGB'))
         return self.transforms[projectID](video), self.target_transform.index(label)
