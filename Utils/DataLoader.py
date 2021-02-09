@@ -52,10 +52,11 @@ class JPGLoader(data.Dataset):
             # Convert mp4 to jpg
             try:    
                 os.mkdir(self.data_folder + mp4file.replace('.mp4','') )
+                cmd = ['ffmpeg','-i', self.data_folder + mp4file, self.data_folder + mp4file.replace('.mp4','') + '/image_%05d.jpg']
+                output = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             except:
-                continue
-            cmd = ['ffmpeg','-i', self.data_folder + mp4file, self.data_folder + mp4file.replace('.mp4','') + '/image_%05d.jpg']
-            output = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                pass
+
             if os.path.exists(self.data_folder + mp4file.replace('.mp4','') + '/image_00001.jpg'):
                 self.dt.at[i,'VideoExists'] = True
 
