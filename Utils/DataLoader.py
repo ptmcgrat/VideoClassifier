@@ -40,9 +40,6 @@ class JPGLoader(data.Dataset):
 
         self.target_transform = sorted(set(self.dt.Label))
 
-        pdb.set_trace()
-        test = self.__getitem__(1)
-
     def _convertMP4s_to_Jpegs(self):
 
         print('Converting mp4 files to jpgs')
@@ -62,7 +59,7 @@ class JPGLoader(data.Dataset):
             if os.path.exists(self.data_folder + mp4file.replace('.mp4','') + '/image_00001.jpg'):
                 self.dt.at[i,'VideoExists'] = True
 
-
+        pdb.set_trace()
         print('Cant find ' + str(len(self.dt[self.dt.VideoExists == False])) + ' videos.')
         self.dt = self.dt[self.dt.VideoExists == True]
         self.dt = self.dt.reset_index()
