@@ -58,7 +58,7 @@ class JPGLoader(data.Dataset):
             except:
                 continue
             cmd = ['ffmpeg','-i', self.data_folder + mp4file, self.data_folder + mp4file.replace('.mp4','') + '/image_%05d.jpg']
-            output = subprocess.run(cmd, stdout = None, stderr = None)
+            output = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         print('Cant find ' + str(len(self.dt[self.dt.VideoExists == False])) + ' videos.')
         self.dt = self.dt[self.dt.VideoExists == True]
