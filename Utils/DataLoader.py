@@ -106,7 +106,7 @@ class JPGLoader(data.Dataset):
 
         video = []
         for i in range(num_images):
-            with open(os.path.join(video_path, 'image_{:05d}.jpg'.format(i)), 'rb') as f:
+            with open(os.path.join(video_path, 'image_{:05d}.jpg'.format(i+1)), 'rb') as f:
                 with Image.open(f) as img:
                     video.append(img.convert('RGB'))
         return self.transforms[projectID](video), self.target_transform.index(label)
