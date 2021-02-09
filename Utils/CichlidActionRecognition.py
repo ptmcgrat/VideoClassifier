@@ -111,7 +111,7 @@ class ML_model():
 
             validation_loss,confusion_matrix,_ = self.val_epoch(i, self.valLoader, self.model, self.criterion, val_logger)
 
-            confusion_matrix_file = os.path.join(self.Results_directory,'epoch_{epoch}_confusion_matrix.csv'.format(epoch=i))
+            confusion_matrix_file = os.path.join(self.results_directory,'epoch_{epoch}_confusion_matrix.csv'.format(epoch=i))
             confusion_matrix.to_csv(confusion_matrix_file)
 
             scheduler.step(validation_loss)
