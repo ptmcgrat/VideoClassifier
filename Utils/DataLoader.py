@@ -46,10 +46,9 @@ class JPGLoader(data.Dataset):
 
         print('Converting mp4 files to jpgs')
         for i,mp4file in enumerate([x for x in self.dt.VideoFile if '.mp4' in x]):
-            if os.path.exists(self.data_folder + mp4file):
-                self.dt.at[i,'VideoExists'] = True
-            else:
+            if not os.path.exists(self.data_folder + mp4file):
                 continue
+ 
             if i%500 == 0:
                 print('Converted ' + str(i) + ' videos of ' + str(len([x for x in self.dt.VideoFile if '.mp4' in x])))
             # Convert mp4 to jpg
@@ -59,6 +58,9 @@ class JPGLoader(data.Dataset):
                 continue
             cmd = ['ffmpeg','-i', self.data_folder + mp4file, self.data_folder + mp4file.replace('.mp4','') + '/image_%05d.jpg']
             output = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if os.path.exists(self.data_folder + mp4file.replace('.mp4','') + '/image_00001.jpg'):
+                self.dt.at[i,'VideoExists'] = True
+
 
         print('Cant find ' + str(len(self.dt[self.dt.VideoExists == False])) + ' videos.')
         self.dt = self.dt[self.dt.VideoExists == True]
