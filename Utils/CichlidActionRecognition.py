@@ -177,7 +177,7 @@ class ML_model():
             })
 
         if epoch % 5 == 0:
-            save_file_path = os.path.join(opt.Results_directory,
+            save_file_path = os.path.join(self.results_directory,
                                           'save_{}.pth'.format(epoch))
             states = {
                 'epoch': epoch + 1,
@@ -197,7 +197,7 @@ class ML_model():
         accuracies = AverageMeter()
 
         end_time = time.time()
-        confusion_matrix = np.zeros((opt.n_classes,opt.n_classes))
+        confusion_matrix = np.zeros((self.n_classes,self.n_classes))
         confidence_for_each_validation = {}
         ###########################################################################
 
@@ -256,7 +256,7 @@ class ML_model():
 
         return losses.avg,confusion_matrix,confidence_matrix
         
-    def test_epoch(self, epoch, data_loader, model, criterion, opt, logger):
+    def test_epoch(self, epoch, data_loader, model, criterion, logger):
         print('test at epoch {}'.format(epoch))
 
         model.eval()
