@@ -40,6 +40,7 @@ class JPGLoader(data.Dataset):
 
         self.target_transform = sorted(set(self.dt.Label))
 
+        pdb.set_trace()
         test = self.__getitem__(1)
 
     def _convertMP4s_to_Jpegs(self):
