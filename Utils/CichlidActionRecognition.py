@@ -12,27 +12,8 @@ from Utils.model import resnet18
 from Utils.DataLoader import JPGLoader
 from Utils.utils import Logger,AverageMeter,calculate_accuracy
 
-#import sys
-#import json
-#import numpy as np
-#import torch
-#import torchvision
-#from torch import nn
-#from torch import optim
-#from torch.optim import lr_scheduler
-#from torch.autograd import Variable
-#import pdb
-#import pandas as pd
-#import time
-
-#from Utils.model import resnet18
-#from Utils.utils import Logger,AverageMeter, calculate_accuracy
-
-#from Utils.data_loader import cichlids
-
-
 class ML_model():
-    def __init__(self, results_directory, clips_directory, labeled_clips_file, xy_crop, t_crop, t_interval, n_classes):
+    def __init__(self, results_directory, clips_directory, labeled_clips_file, xy_crop, t_crop, t_interval, n_classes, projectMeans):
         self.results_directory = results_directory
         self.clips_directory = clips_directory
         self.clips_dt = pd.read_csv(labeled_clips_file)
@@ -41,16 +22,11 @@ class ML_model():
         self.t_interval = t_interval
         self.t_size = int(t_crop/t_interval)
         self.n_classes = n_classes
-        #prepare the data is the data is not prepared
-        #self.source_json_file = os.path.join(args.Results_directory,'source.json')
+        self.projectMeans
 
     def createModel(self):
         print('Creating Model')
-        self.model = resnet18(
-                num_classes=self.n_classes,
-                shortcut_type='B',
-                sample_size=self.xy_crop,
-                sample_duration=self.t_size)
+        self.model = resnet18(num_classes=self.n_classes, shortcut_type='B', sample_size=self.xy_crop, sample_duration=self.t_size)
 
         self.model = self.model.cuda()
         self.model = nn.DataParallel(self.model, device_ids=None)
@@ -85,11 +61,16 @@ class ML_model():
         self.n_threads = n_threads
         print('Creating Data Loaders')
 
-        trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = True)
-        valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = True)
+        trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
+        valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
 
         self.trainLoader = torch.utils.data.DataLoader(trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
         self.valLoader = torch.utils.data.DataLoader(valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
+        self.trainLoader.dt.to_csv('TrainingVideos.csv')
+        self.trainLoader.badVideos_dt.to_csv('MissingTrainingVideos.csv')
+        self.trainLoader.dt.to_csv('ValidationVideos.csv')
+        self.trainLoader.badVideos_dt.to_csv('ValidationTrainingVideos.csv')
+        
         print('Done')
 
     def trainModel(self, n_epochs, nesterov, dampening, learning_rate, momentum, weight_decay, lr_patience):

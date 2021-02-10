@@ -22,21 +22,27 @@ class JPGLoader(data.Dataset):
 
         self.dt['VideoExists'] = False
 
-        self.dt['MeanR'] = np.nan
-        self.dt['MeanG'] = np.nan
-        self.dt['MeanB'] = np.nan
+        if projectMeans:
+            self.dt['MeanR'] = np.nan
+            self.dt['MeanG'] = np.nan
+            self.dt['MeanB'] = np.nan
 
-        self.dt['StdR'] = np.nan
-        self.dt['StdG'] = np.nan
-        self.dt['StdB'] = np.nan
+            self.dt['StdR'] = np.nan
+            self.dt['StdG'] = np.nan
+            self.dt['StdB'] = np.nan
 
         self._convertMP4s_to_Jpegs()
-        self._calculateProjectIDstats()
+        if projectMeans:
+            self._calculateProjectIDstats()
 
         self.transforms = {}
 
         for projectID, values in self.project_dict.items():
-            self.transforms[projectID] = TransformJPEGs(self.xy_crop, self.t_crop, self.t_interval, augment = self.augment, mean = values[0], std = values[1])
+            if projectMeans:
+                self.transforms[projectID] = TransformJPEGs(self.xy_crop, self.t_crop, self.t_interval, augment = self.augment, mean = values[0], std = values[1])
+            else:
+                self.transforms[projectID] = TransformJPEGs(self.xy_crop, self.t_crop, self.t_interval, augment = self.augment, mean = None, std = None)
+
 
         self.target_transform = sorted(set(self.dt.Label))
 
@@ -60,7 +66,8 @@ class JPGLoader(data.Dataset):
             if os.path.exists(self.data_folder + mp4file.replace('.mp4','') + '/image_00001.jpg'):
                 self.dt.at[i,'VideoExists'] = True
 
-        print('Cant find ' + str(len(self.dt[self.dt.VideoExists == False])) + ' videos.')
+        self.badVideos_dt = self.dt[self.dt.VideoExists == False]
+        print('Cant find ' + str(len(self.badVideos_dt)) + ' videos.')
         self.dt = self.dt[self.dt.VideoExists == True]
         self.dt = self.dt.reset_index()
 
@@ -90,7 +97,6 @@ class JPGLoader(data.Dataset):
         self.project_dict = {}
         for index,row in self.dt.groupby('ProjectID').mean()[['MeanR','MeanG','MeanB','StdR','StdG','StdB']].iterrows():
             self.project_dict[index] = [np.array(row[0:3]),np.array(row[3:6])]
-
 
     def __len__(self):
         return len([x for x in self.dt.VideoFile if '.mp4' in x])
