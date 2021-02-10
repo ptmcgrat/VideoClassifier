@@ -18,7 +18,10 @@ parser.add_argument('--gpu', default='0', type=str, help='The index of GPU to us
 parser.add_argument('--xy_crop', default=90, type=int, help='Temporal duration of inputs')
 parser.add_argument('--t_crop', default=90, type=int, help='Height and width of inputs')
 parser.add_argument('--t_interval', default=1, type=int, help='Height and width of inputs')
- 
+parser.add_argument('--projectMeans', action = 'store_true', type=int, help='Height and width of inputs')
+parser.set_defaults(projectMeans=False)
+
+
 # Parameters for the optimizer
 parser.add_argument('--learning_rate',default=0.1,type=float,help='Initial learning rate (divided by 10 while training by lr scheduler)')
 parser.add_argument('--momentum', default=0.9, type=float, help='Momentum')
@@ -60,5 +63,5 @@ os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu
 learningObj = ML_model(args.Results_directory, args.Videos_directory, args.Videos_file, args.xy_crop, args.t_crop, args.t_interval, args.n_classes)
 learningObj.createModel()
 learningObj.splitData('Train')
-learningObj.createDataLoaders(args.batch_size, args.n_threads)
+learningObj.createDataLoaders(args.batch_size, args.n_threads, args.projectMeans)
 learningObj.trainModel(args.n_epochs, args.nesterov, args.dampening, args.learning_rate, args.momentum, args.weight_decay, args.lr_patience)

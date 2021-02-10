@@ -13,7 +13,7 @@ from Utils.DataLoader import JPGLoader
 from Utils.utils import Logger,AverageMeter,calculate_accuracy
 
 class ML_model():
-    def __init__(self, results_directory, clips_directory, labeled_clips_file, xy_crop, t_crop, t_interval, n_classes, projectMeans):
+    def __init__(self, results_directory, clips_directory, labeled_clips_file, xy_crop, t_crop, t_interval, n_classes):
         self.results_directory = results_directory
         self.clips_directory = clips_directory
         self.clips_dt = pd.read_csv(labeled_clips_file)
@@ -22,7 +22,6 @@ class ML_model():
         self.t_interval = t_interval
         self.t_size = int(t_crop/t_interval)
         self.n_classes = n_classes
-        self.projectMeans
 
     def createModel(self):
         print('Creating Model')
@@ -56,9 +55,10 @@ class ML_model():
             else:
                 self.clips_dt.at[index,'Dataset'] = 'Test'
 
-    def createDataLoaders(self, batch_size, n_threads):
+    def createDataLoaders(self, batch_size, n_threads, projectMeans):
         self.batch_size = batch_size
         self.n_threads = n_threads
+        self.projectMeans = projectMeans
         print('Creating Data Loaders')
 
         trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
