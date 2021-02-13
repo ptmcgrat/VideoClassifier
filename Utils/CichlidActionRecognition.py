@@ -61,15 +61,15 @@ class ML_model():
         self.projectMeans = projectMeans
         print('Creating Data Loaders')
 
-        trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
-        valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
+        self.trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
+        self.valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
 
         self.trainLoader = torch.utils.data.DataLoader(trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
         self.valLoader = torch.utils.data.DataLoader(valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
-        self.trainLoader.dt.to_csv('TrainingVideos.csv')
-        self.trainLoader.badVideos_dt.to_csv('MissingTrainingVideos.csv')
-        self.trainLoader.dt.to_csv('ValidationVideos.csv')
-        self.trainLoader.badVideos_dt.to_csv('ValidationTrainingVideos.csv')
+        self.trainData.dt.to_csv('TrainingVideos.csv')
+        self.trainData.badVideos_dt.to_csv('MissingTrainingVideos.csv')
+        self.trainData.dt.to_csv('ValidationVideos.csv')
+        self.trainData.badVideos_dt.to_csv('ValidationTrainingVideos.csv')
         
         print('Done')
 
