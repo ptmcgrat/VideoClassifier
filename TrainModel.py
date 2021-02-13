@@ -18,7 +18,7 @@ parser.add_argument('--gpu', default='0', type=str, help='The index of GPU to us
 parser.add_argument('--xy_crop', default=120, type=int, help='Temporal duration of inputs')
 parser.add_argument('--t_crop', default=96, type=int, help='Height and width of inputs')
 parser.add_argument('--t_interval', default=1, type=int, help='Height and width of inputs')
-parser.add_argument('--projectMeans', action = 'store_true', type=int, help='Height and width of inputs')
+parser.add_argument('--projectMeans', action = 'store_true', help='Height and width of inputs')
 parser.set_defaults(projectMeans=False)
 
 
