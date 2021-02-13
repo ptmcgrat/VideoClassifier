@@ -64,8 +64,8 @@ class ML_model():
         self.trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
         self.valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
 
-        self.trainLoader = torch.utils.data.DataLoader(trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
-        self.valLoader = torch.utils.data.DataLoader(valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
+        self.trainLoader = torch.utils.data.DataLoader(self.trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
+        self.valLoader = torch.utils.data.DataLoader(self.valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
         self.trainData.dt.to_csv('TrainingVideos.csv')
         self.trainData.badVideos_dt.to_csv('MissingTrainingVideos.csv')
         self.trainData.dt.to_csv('ValidationVideos.csv')
