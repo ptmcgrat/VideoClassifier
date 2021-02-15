@@ -185,15 +185,3 @@ class Normalize(object):
             t.sub_(m).div_(s)
         return tensor
 
-
-"""
-frames = []
-#transform = TransformJPEGs(60, 60, 2, True, [96.9318,82.6879,76.3807], [9.4873,11.9608,10.9196])
-transform = TransformJPEGs(60, 60, 2, True)
-for i in range(1,117):
-    image_path = os.path.join('0001_vid__3747__505__4955__606__221', 'image_{:05d}.jpg'.format(i))
-    with open(image_path, 'rb') as f:
-        with Image.open(f) as img:
-            frames.append(img.convert('RGB'))
-frames = transform(frames)
-pdb.set_trace()"""

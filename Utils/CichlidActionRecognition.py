@@ -25,7 +25,6 @@ class ML_model():
 
     def createModel(self):
         print('Creating Model')
-        self.model = resnet18(num_classes=self.n_classes, shortcut_type='B', sample_size=self.xy_crop, sample_duration=self.t_size)
 
         self.model = self.model.cuda()
         self.model = nn.DataParallel(self.model, device_ids=None)
@@ -86,6 +85,15 @@ class ML_model():
        
         optimizer = optim.SGD(self.parameters, lr=learning_rate, momentum=momentum, dampening=dampening, weight_decay=weight_decay, nesterov=nesterov)
         scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=lr_patience)
+
+         if trainedModel is None:
+            self.model = resnet18(num_classes=self.n_classes, shortcut_type='B', sample_size=self.xy_crop, sample_duration=self.t_size)
+        else:
+            checkpoint = torch.load(opt.Trained_model)
+            begin_epoch = checkpoint['epoch']
+            model.load_state_dict(checkpoint['state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer'])
+
 
         for i in range(n_epochs + 1):
             self.train_epoch(i, self.trainLoader, self.model, self.criterion, optimizer, train_logger, train_batch_logger)

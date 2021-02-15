@@ -8,6 +8,11 @@ parser.add_argument('--Videos_directory', type = str, required = True, help = 'N
 parser.add_argument('--Videos_file', type = str, required = True, help = 'Csv file listing each video. Must contain three columns: VideoFile, Label, ProjectID')
 parser.add_argument('--Purpose', type = str, default = 'denovo', choices = ['denovo', 'finetune'], help = 'Train model from scratch or finetune existing model')
 
+# Finetune input data
+parser.add_argument('--Finetune_data', type = str, required = False, help = 'Csv file listing each video. Must contain three columns: VideoFile, Label, ProjectID')
+parser.add_argument('--Trained_model', type=str,help='Save data (.pth) of previous training')
+parser.add_argument('--Training_log', type = str, required = False, help = 'Necessary for finetuning. Lists parameters used in previous training')
+
 # Output data
 parser.add_argument('--Results_directory', type = str, required = True, help = 'Directory to store output files')
 
@@ -40,13 +45,20 @@ parser.add_argument('--n_classes',default=10,type=int)
 parser.add_argument('--n_epochs',default=100,type=int,help='Number of total epochs to run')
 
 # Parameters specific for finetuning for other animals
-parser.add_argument('--resume_path',default='/data/home/llong35/temp/test_aug_8_2_restricted_total_sampling/save_100.pth',type=str,help='Save data (.pth) of previous training')
 
 args = parser.parse_args()
 
 # Make directory if necessary
 if not os.path.exists(args.Results_directory):
     os.makedirs(args.Results_directory)
+
+if args.Purpose == 'finetune':
+	commands = {}
+	with open(args.Training_log) as f:
+		for line in f:
+			commands[line.rstrip().split(': ')[0]] = line.rstrip().split(': ')[1]
+	pdb.set_trace()
+
 
 with open(os.path.join(args.Results_directory, 'TrainingLog.txt'),'w') as f:
 	for key, value in vars(args).items():
