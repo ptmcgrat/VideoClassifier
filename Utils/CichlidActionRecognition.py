@@ -20,7 +20,6 @@ class ML_model():
         self.xy_crop = xy_crop
         self.t_crop = t_crop
         self.t_interval = t_interval
-        pdb.set_trace()
         self.t_size = int(t_crop/t_interval)
         self.n_classes = n_classes
 
