@@ -58,8 +58,7 @@ if args.Purpose == 'finetune':
 		for line in f:
 			prev_commands[line.rstrip().split(': ')[0]] = line.rstrip().split(': ')[1]
 	for parameter in ['xy_crop', 't_crop', 't_interval']:
-		sys.exit()
-		args[parameter] = prev_commands[parameter]
+		args.__dict__[parameter] = prev_commands[parameter]
 	pdb.set_trace()
 
 with open(os.path.join(args.Results_directory, 'TrainingLog.txt'),'w') as f:
