@@ -57,6 +57,8 @@ if args.Purpose == 'finetune':
 	with open(args.Training_log) as f:
 		for line in f:
 			prev_commands[line.rstrip().split(': ')[0]] = line.rstrip().split(': ')[1]
+	for parameter in ['xy_crop', 't_crop', 't_interval']:
+		args[parameter] = prev_commands[parameter]
 	pdb.set_trace()
 
 with open(os.path.join(args.Results_directory, 'TrainingLog.txt'),'w') as f:
