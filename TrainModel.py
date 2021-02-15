@@ -10,7 +10,7 @@ parser.add_argument('--Purpose', type = str, default = 'denovo', choices = ['den
 
 # Finetune input data
 parser.add_argument('--Finetune_data', type = str, required = False, help = 'Csv file listing each video. Must contain three columns: VideoFile, Label, ProjectID')
-parser.add_argument('--Trained_model', type=str,help='Save data (.pth) of previous training')
+parser.add_argument('--Trained_model', type=str, required = False, help='Save data (.pth) of previous training')
 parser.add_argument('--Training_log', type = str, required = False, help = 'Necessary for finetuning. Lists parameters used in previous training')
 
 # Output data
@@ -59,7 +59,6 @@ if args.Purpose == 'finetune':
 			prev_commands[line.rstrip().split(': ')[0]] = line.rstrip().split(': ')[1]
 	for parameter in ['xy_crop', 't_crop', 't_interval']:
 		args.__dict__[parameter] = prev_commands[parameter]
-	pdb.set_trace()
 
 with open(os.path.join(args.Results_directory, 'TrainingLog.txt'),'w') as f:
 	for key, value in vars(args).items():
@@ -77,4 +76,4 @@ learningObj = ML_model(args.Results_directory, args.Videos_directory, args.Video
 learningObj.createModel()
 learningObj.splitData('Train')
 learningObj.createDataLoaders(args.batch_size, args.n_threads, args.projectMeans)
-learningObj.trainModel(args.n_epochs, args.nesterov, args.dampening, args.learning_rate, args.momentum, args.weight_decay, args.lr_patience)
+learningObj.trainModel(args.n_epochs, args.nesterov, args.dampening, args.learning_rate, args.momentum, args.weight_decay, args.lr_patience, args.Trained_model)

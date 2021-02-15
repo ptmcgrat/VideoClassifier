@@ -72,7 +72,7 @@ class ML_model():
         
         print('Done')
 
-    def trainModel(self, n_epochs, nesterov, dampening, learning_rate, momentum, weight_decay, lr_patience):
+    def trainModel(self, n_epochs, nesterov, dampening, learning_rate, momentum, weight_decay, lr_patience, trainedModel):
         
         train_logger = Logger(os.path.join(self.results_directory, 'train.log'), ['epoch', 'loss', 'acc', 'lr'])
         train_batch_logger = Logger(os.path.join(self.results_directory, 'train_batch.log'), ['epoch', 'batch', 'iter', 'loss', 'acc', 'lr'])
@@ -93,7 +93,7 @@ class ML_model():
             begin_epoch = checkpoint['epoch']
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
-
+            pdb.set_trace()
 
         for i in range(n_epochs + 1):
             self.train_epoch(i, self.trainLoader, self.model, self.criterion, optimizer, train_logger, train_batch_logger)
