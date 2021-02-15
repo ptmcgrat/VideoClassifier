@@ -53,12 +53,11 @@ if not os.path.exists(args.Results_directory):
     os.makedirs(args.Results_directory)
 
 if args.Purpose == 'finetune':
-	commands = {}
+	prev_commands = {}
 	with open(args.Training_log) as f:
 		for line in f:
-			commands[line.rstrip().split(': ')[0]] = line.rstrip().split(': ')[1]
+			prev_commands[line.rstrip().split(': ')[0]] = line.rstrip().split(': ')[1]
 	pdb.set_trace()
-
 
 with open(os.path.join(args.Results_directory, 'TrainingLog.txt'),'w') as f:
 	for key, value in vars(args).items():
