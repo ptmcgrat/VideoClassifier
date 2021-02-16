@@ -32,8 +32,7 @@ class JPGLoader(data.Dataset):
             self.dt['StdB'] = np.nan
 
         self._convertMP4s_to_Jpegs()
-        if projectMeans:
-            self._calculateProjectIDstats()
+        self._calculateProjectIDstats()
 
         self.transforms = {}
 
