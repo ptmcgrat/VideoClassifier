@@ -71,7 +71,7 @@ class ML_model():
         self.trainData.badVideos_dt.to_csv(self.results_directory + 'ValidationTrainingVideos.csv')
         
         with open(self.results_directory + 'classInd.txt', 'w') as f:
-            for i, target in self.trainData.target_transform:
+            for i, target in enumerate(self.trainData.target_transform):
                 print(str(i) + ',' + str(target), file = f)
 
         print('Done')
