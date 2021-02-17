@@ -207,6 +207,8 @@ class ML_model():
 
                 rows = [int(x) for x in targets]
                 columns = [int(x) for x in np.argmax(outputs.data.cpu(),1)]
+                pdb.set_trace()
+
                 assert len(rows) == len(columns)
                 for idx in range(len(rows)):
                     confusion_matrix[rows[idx]][columns[idx]] +=1
