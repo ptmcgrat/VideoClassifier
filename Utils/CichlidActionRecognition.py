@@ -116,7 +116,7 @@ class ML_model():
         accuracies = AverageMeter()
 
         end_time = time.time()
-        for i, (inputs, targets, paths) in enumerate(data_loader):
+        for i, (inputs, targets, videofile, projectID) in enumerate(data_loader):
             data_time.update(time.time() - end_time)
 
             targets = targets.cuda(non_blocking=True)
@@ -177,6 +177,8 @@ class ML_model():
     def val_epoch(self, epoch, data_loader, model, criterion, logger):
         print('validation at epoch {}'.format(epoch))
 
+        acc_dt = pd.DataFrame(columns = ['VideoFile', 'ProjectID', 'Correct'])
+
         model.eval()
 
         batch_time = AverageMeter()
@@ -190,7 +192,7 @@ class ML_model():
         ###########################################################################
 
         # pdb.set_trace()
-        for i, (inputs, targets, paths) in enumerate(data_loader):
+        for i, (inputs, targets, videofile, projectID) in enumerate(data_loader):
             data_time.update(time.time() - end_time)
 
             targets = targets.cuda(non_blocking=True)
@@ -200,6 +202,7 @@ class ML_model():
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
                 acc = calculate_accuracy(outputs, targets)
+                acc_dt.append(calculate_accuracy_by_projectID(outputs, targets, videofile, projectID))
                 ########  temp line, needs to be removed##################################
                 for j in range(len(targets)):
                     key = paths[j].split('/')[-1]
@@ -207,7 +210,6 @@ class ML_model():
 
                 rows = [int(x) for x in targets]
                 columns = [int(x) for x in np.argmax(outputs.data.cpu(),1)]
-                pdb.set_trace()
 
                 assert len(rows) == len(columns)
                 for idx in range(len(rows)):
@@ -238,6 +240,8 @@ class ML_model():
             # confusion_matrix.to_csv(file)
         confidence_matrix = pd.DataFrame.from_dict(confidence_for_each_validation, orient='index')
         
+        pdb.set_trace()
+
             #     confidence_matrix.to_csv('confidence_matrix.csv')
 
             #########  temp line, needs to be removed##################################

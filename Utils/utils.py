@@ -1,5 +1,5 @@
 import csv
-
+import pandas as pd
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -61,3 +61,13 @@ def calculate_accuracy(outputs, targets):
         n_correct_elems = correct.float().sum().item()
 
     return n_correct_elems / batch_size
+
+def calculate_accuracy_by_projectID(outputs, targets, videofile, projectID):
+    batch_size = targets.size(0)
+
+    _, pred = outputs.topk(1, 1, True)
+    pred = pred.t()
+    correct = pred.eq(targets.view(1, -1))
+    
+    return dt.DataFrame({'VideoFile': videofile, 'ProjectID': projectID, 'Correct': correct})
+
