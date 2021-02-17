@@ -142,7 +142,6 @@ class ML_model():
             batch_time.update(time.time() - end_time)
             end_time = time.time()
 
-            calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
 
             batch_logger.log({
                 'epoch': epoch,
@@ -212,7 +211,7 @@ class ML_model():
                 acc_dt.append(calculate_accuracy_by_projectID(outputs, targets, videofile, projectID))
                 ########  temp line, needs to be removed##################################
                 for j in range(len(targets)):
-                    key = paths[j].split('/')[-1]
+                    key = videofile[j].split('/')[-1]
                     confidence_for_each_validation[key] = [x.item() for x in outputs[j]]
 
                 rows = [int(x) for x in targets]
