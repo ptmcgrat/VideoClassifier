@@ -10,7 +10,7 @@ from torch.optim import lr_scheduler
 
 from Utils.model import resnet18
 from Utils.DataLoader import JPGLoader
-from Utils.utils import Logger,AverageMeter,calculate_accuracy
+from Utils.utils import Logger,AverageMeter,calculate_accuracy,calculate_accuracy_by_projectID
 
 class ML_model():
     def __init__(self, results_directory, clips_directory, labeled_clips_file, xy_crop, t_crop, t_interval, n_classes):
@@ -70,6 +70,10 @@ class ML_model():
         self.trainData.dt.to_csv(self.results_directory + 'ValidationVideos.csv')
         self.trainData.badVideos_dt.to_csv(self.results_directory + 'ValidationTrainingVideos.csv')
         
+        with open(self.results_directory + 'classInd.txt') as f:
+            for i, target in self.trainData.target_transform:
+                print(str(i) + ',' + str(target), file = f)
+
         print('Done')
 
     def trainModel(self, n_epochs, nesterov, dampening, learning_rate, momentum, weight_decay, lr_patience, trainedModel):
