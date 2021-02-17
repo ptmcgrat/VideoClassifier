@@ -250,7 +250,8 @@ class ML_model():
             # confusion_matrix.to_csv(file)
         confidence_matrix = pd.DataFrame.from_dict(confidence_for_each_validation, orient='index')
         
-        pdb.set_trace()
+        acc_dt.to_csv(os.path.join(self.results_directory, 'project_data_{}.csv'.format(epoch)), sep = ',')
+
 
             #     confidence_matrix.to_csv('confidence_matrix.csv')
 
