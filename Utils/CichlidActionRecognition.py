@@ -208,7 +208,7 @@ class ML_model():
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
                 acc = calculate_accuracy(outputs, targets)
-                acc_dt.append(calculate_accuracy_by_projectID(outputs, targets, videofile, projectID))
+                acc_dt = acc_dt.append(calculate_accuracy_by_projectID(outputs, targets, videofile, projectID))
                 ########  temp line, needs to be removed##################################
                 for j in range(len(targets)):
                     key = videofile[j].split('/')[-1]
