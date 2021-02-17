@@ -66,18 +66,16 @@ class ML_model():
         self.trainData.dt['Datatype'] = 'Train'
         self.valData.dt['Datatype'] = 'Validate'
 
+        # Output data on split
         self.trainData.dt.append(self.valData.dt).to_csv('VideoSplit.csv', sep = ',')
-
         self.trainData.badVideos_dt.append(self.valData.badVideos_dt).to_csv('MissingVideos.csv', sep = ',')
-
-
-        self.trainLoader = torch.utils.data.DataLoader(self.trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
-        self.valLoader = torch.utils.data.DataLoader(self.valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
-        
         with open(self.results_directory + 'classInd.txt', 'w') as f:
             for i, target in enumerate(self.trainData.target_transform):
                 print(str(i) + ',' + str(target), file = f)
 
+        self.trainLoader = torch.utils.data.DataLoader(self.trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
+        self.valLoader = torch.utils.data.DataLoader(self.valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
+        
         print('Done')
 
     def trainModel(self, n_epochs, nesterov, dampening, learning_rate, momentum, weight_decay, lr_patience, trainedModel):
@@ -171,7 +169,7 @@ class ML_model():
                 'acc': accuracies.avg,
                 'lr': optimizer.param_groups[0]['lr']
             })
-
+            calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
         if epoch % 5 == 0:
             save_file_path = os.path.join(self.results_directory,
                                           'save_{}.pth'.format(epoch))
