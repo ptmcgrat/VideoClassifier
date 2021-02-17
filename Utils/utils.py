@@ -67,7 +67,7 @@ def calculate_accuracy_by_projectID(outputs, targets, videofile, projectID):
 
     _, pred = outputs.topk(1, 1, True)
     pred = pred.t()
-    correct = pred.eq(targets.view(1, -1))
+    correct = bool(pred.eq(targets.view(1, -1))[0].cpu)
     
     return pd.DataFrame({'VideoFile': videofile, 'ProjectID': projectID, 'Correct': correct.cpu()})
 

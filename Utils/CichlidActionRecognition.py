@@ -35,17 +35,21 @@ class ML_model():
     def splitData(self, analysis_type):
         print('Splitting Data')
 
-        self.clips_dt['Dataset'] = ''
+        if 'Dataset' not in self.clips_dt:
+            self.clips_dt['Dataset'] = ''
+
         if analysis_type == 'Train':
             train_cutoff = 0.8
             val_cutoff = 1.0
-        elif analysis_type == 'Predict':
-            train_cutoff = 0
+        elif analysis_type == 'Refine':
+            train_cutoff = 0.5
             val_cutoff = 1.0
         else:
             pass
 
         for index, row in self.clips_dt.iterrows():
+            if row.Dataset in ['Train', 'Validate']:
+                continue
             p = random.random()
             if p<=train_cutoff:
                 self.clips_dt.at[index,'Dataset'] = 'Train'
@@ -141,8 +145,8 @@ class ML_model():
 
             batch_time.update(time.time() - end_time)
             end_time = time.time()
-
-
+            calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
+            
             batch_logger.log({
                 'epoch': epoch,
                 'batch': i + 1,
