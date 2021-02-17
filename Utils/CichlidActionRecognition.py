@@ -142,6 +142,8 @@ class ML_model():
             batch_time.update(time.time() - end_time)
             end_time = time.time()
 
+            calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
+
             batch_logger.log({
                 'epoch': epoch,
                 'batch': i + 1,
@@ -169,7 +171,6 @@ class ML_model():
                 'acc': accuracies.avg,
                 'lr': optimizer.param_groups[0]['lr']
             })
-            calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
         if epoch % 5 == 0:
             save_file_path = os.path.join(self.results_directory,
                                           'save_{}.pth'.format(epoch))
