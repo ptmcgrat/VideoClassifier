@@ -70,7 +70,7 @@ class ML_model():
         self.trainData.dt.to_csv(self.results_directory + 'ValidationVideos.csv')
         self.trainData.badVideos_dt.to_csv(self.results_directory + 'ValidationTrainingVideos.csv')
         
-        with open(self.results_directory + 'classInd.txt') as f:
+        with open(self.results_directory + 'classInd.txt', 'w') as f:
             for i, target in self.trainData.target_transform:
                 print(str(i) + ',' + str(target), file = f)
 
