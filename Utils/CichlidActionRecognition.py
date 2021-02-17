@@ -63,12 +63,16 @@ class ML_model():
         self.trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
         self.valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
 
+        self.trainData.dt['Datatype'] = 'Train'
+        self.valData.dt['Datatype'] = 'Validate'
+
+        self.trainData.dt.append(self.valData.dt).to_csv('VideoSplit.csv', sep = ',')
+
+        self.trainData.badVideos_dt.append(self.valData.badVideos_dt).to_csv('MissingVideos.csv', sep = ',')
+
+
         self.trainLoader = torch.utils.data.DataLoader(self.trainData, batch_size = self.batch_size, shuffle = True, num_workers = self.n_threads, pin_memory = True)
         self.valLoader = torch.utils.data.DataLoader(self.valData, batch_size = self.batch_size, shuffle = False, num_workers = self.n_threads, pin_memory = True)
-        self.trainData.dt.to_csv(self.results_directory + 'TrainingVideos.csv')
-        self.trainData.badVideos_dt.to_csv(self.results_directory + 'MissingTrainingVideos.csv')
-        self.trainData.dt.to_csv(self.results_directory + 'ValidationVideos.csv')
-        self.trainData.badVideos_dt.to_csv(self.results_directory + 'ValidationTrainingVideos.csv')
         
         with open(self.results_directory + 'classInd.txt', 'w') as f:
             for i, target in enumerate(self.trainData.target_transform):
