@@ -52,12 +52,15 @@ class ML_model():
             if row.Dataset in ['Train', 'Validate']:
                 continue
             p = random.random()
-            if p<=train_cutoff:
-                self.clips_dt.at[index,'Dataset'] = 'Train'
-            elif p<=val_cutoff:
-                self.clips_dt.at[index,'Dataset'] = 'Validate'
-            else:
-                pass
+            try:
+                if p<=train_cutoff:
+                    self.clips_dt.at[index,'Dataset'] = 'Train'
+                elif p<=val_cutoff:
+                    self.clips_dt.at[index,'Dataset'] = 'Validate'
+                else:
+                    pass
+            except ValueError:
+                pdb.set_trace()
 
     def createDataLoaders(self, batch_size, n_threads, projectMeans):
         self.batch_size = batch_size
