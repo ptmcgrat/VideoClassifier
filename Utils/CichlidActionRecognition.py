@@ -35,8 +35,9 @@ class ML_model():
     def splitData(self, analysis_type):
         print('Splitting Data')
 
-        if 'Dataset' not in self.clips_dt:
+        if 'Dataset' not in self.clips_dt or self.clips_dt.Dataset.dtype == 'float64':
             self.clips_dt['Dataset'] = ''
+    
 
         if analysis_type == 'Train':
             train_cutoff = 0.8
