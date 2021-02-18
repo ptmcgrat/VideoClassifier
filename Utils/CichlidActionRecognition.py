@@ -163,7 +163,7 @@ class ML_model():
             end_time = time.time()
             t_dt = calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
             t_dt.Predictions.apply(self.trainData.target_transform.__getitem__)
-            pdb.set_trace()
+
             batch_logger.log({
                 'epoch': epoch,
                 'batch': i + 1,
