@@ -45,7 +45,7 @@ class ML_model():
             train_cutoff = 0.5
             val_cutoff = 1.0
         elif analysis_type == 'Predict':
-            train cutoff = 0
+            train_cutoff = 0
             val_cutoff = 0
         else:
             pass
