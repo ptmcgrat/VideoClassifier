@@ -1,5 +1,6 @@
 import csv, pdb
 import pandas as pd
+import scipy.special
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -69,7 +70,7 @@ def calculate_accuracy_by_projectID(outputs, targets, videofile, projectID):
     pred = pred.t()
     correct = pred.eq(targets.view(1, -1)).cpu()
     
-    pdb.set_trace()
+    confidence = scipy.special.softmax(outputs.cpu().detach().numpy(), axis = 1).max(axis = 1)
 
-    return pd.DataFrame({'VideoFile': videofile, 'ProjectID': projectID, 'Correct': correct[0], 'Predictions': pred})
+    return pd.DataFrame({'VideoFile': videofile, 'ProjectID': projectID, 'Correct': correct[0], 'Predictions': pred[0].cpu(), 'Confidence':confidence})
 

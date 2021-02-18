@@ -161,8 +161,8 @@ class ML_model():
 
             batch_time.update(time.time() - end_time)
             end_time = time.time()
-            calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
-            
+            t_dt = calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
+            pdb.set_trace()
             batch_logger.log({
                 'epoch': epoch,
                 'batch': i + 1,
