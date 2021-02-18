@@ -44,11 +44,9 @@ class ML_model():
         elif analysis_type == 'Refine':
             train_cutoff = 0.5
             val_cutoff = 1.0
-        elif analysis_type == 'Predict':
-            train_cutoff = 0
-            val_cutoff = 0
         else:
-            pass
+            train_cutoff = 0.0
+            val_cutoff = 1.0
 
         for index, row in self.clips_dt.iterrows():
             if row.Dataset in ['Train', 'Validate']:
@@ -59,7 +57,7 @@ class ML_model():
             elif p<=val_cutoff:
                 self.clips_dt.at[index,'Dataset'] = 'Validate'
             else:
-                self.clips_dt.at[index,'Dataset'] = 'Test'
+                pass
 
     def createDataLoaders(self, batch_size, n_threads, projectMeans):
         self.batch_size = batch_size
