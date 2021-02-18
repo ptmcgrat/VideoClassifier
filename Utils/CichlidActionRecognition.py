@@ -162,6 +162,7 @@ class ML_model():
             batch_time.update(time.time() - end_time)
             end_time = time.time()
             t_dt = calculate_accuracy_by_projectID(outputs, targets, videofile, projectID)
+            t_dt.Predictions.apply(self.trainData.target_transform.__getitem__)
             pdb.set_trace()
             batch_logger.log({
                 'epoch': epoch,
@@ -266,6 +267,8 @@ class ML_model():
             # confusion_matrix.to_csv(file)
         confidence_matrix = pd.DataFrame.from_dict(confidence_for_each_validation, orient='index')
         
+        acc_dt['Predictions'] = acc_dt.Predictions.apply(self.trainData.target_transform.__getitem__)
+        acc_dt[['VideoFile','ProjectID','Predictions','Confidence']].to_csv(os.path.join(self.results_directory, 'predictions_{}.csv'.format(epoch)), sep = ',')
         acc_dt = acc_dt.groupby('ProjectID').agg({'Correct':['sum','count']}).reset_index()
         acc_dt.to_csv(os.path.join(self.results_directory, 'project_data_{}.csv'.format(epoch)), sep = ',')
 
