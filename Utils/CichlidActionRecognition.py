@@ -187,7 +187,7 @@ class ML_model():
                 data_time=data_time,
                 loss=losses,
                 acc=accuracies))
-            break
+
         epoch_logger.log({
                 'epoch': epoch,
                 'loss': losses.avg,
@@ -270,8 +270,7 @@ class ML_model():
             # confusion_matrix.to_csv(file)
         confidence_matrix = pd.DataFrame.from_dict(confidence_for_each_validation, orient='index')
 
-        pdb.set_trace()
-        acc_dt['Predictions'] = acc_dt.Predictions.apply(self.trainData.target_transform.__getitem__)
+        acc_dt['Predictions'] = acc_dt.Predictions.astype('int').apply(self.trainData.target_transform.__getitem__)
         acc_dt[['VideoFile','ProjectID','Predictions','Confidence']].to_csv(os.path.join(self.results_directory, 'predictions_{}.csv'.format(epoch)), sep = ',')
         acc_dt = acc_dt.groupby('ProjectID').agg({'Correct':['sum','count']}).reset_index()
         acc_dt.to_csv(os.path.join(self.results_directory, 'project_data_{}.csv'.format(epoch)), sep = ',')
