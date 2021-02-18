@@ -44,6 +44,9 @@ class ML_model():
         elif analysis_type == 'Refine':
             train_cutoff = 0.5
             val_cutoff = 1.0
+        elif analysis_type == 'Predict':
+            train cutoff = 0
+            val_cutoff = 0
         else:
             pass
 
@@ -66,6 +69,7 @@ class ML_model():
 
         self.trainData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Train'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
         self.valData = JPGLoader(self.clips_directory, self.clips_dt[self.clips_dt.Dataset == 'Validate'], self.xy_crop, self.t_crop, self.t_interval, augment = True, projectMeans = self.projectMeans)
+
 
         self.trainData.dt['Datatype'] = 'Train'
         self.valData.dt['Datatype'] = 'Validate'
@@ -97,9 +101,9 @@ class ML_model():
         scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=lr_patience)
 
         if trainedModel is not None:
-            checkpoint = torch.load(opt.Trained_model)
+            checkpoint = torch.load(trainedModel)
             begin_epoch = checkpoint['epoch']
-            model.load_state_dict(checkpoint['state_dict'])
+            self.model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
             pdb.set_trace()
 
@@ -113,10 +117,22 @@ class ML_model():
 
             scheduler.step(validation_loss)
             #if i % 5 == 0 and len(test_data) != 0:
-            #   _ = self.val_epoch(i, test_loader, model, criterion, opt, test_logger)
+     
+           #   _ = self.val_epoch(i, test_loader, model, criterion, opt, test_logger)
 
-    def train_epoch(self, epoch, data_loader, model, criterion, optimizer,
-                    epoch_logger, batch_logger):
+    def predictLabels(self, trainedModel):
+        val_logger = Logger(os.path.join(self.results_directory, 'val.log'), ['epoch', 'loss', 'acc'])
+
+        checkpoint = torch.load(trainedModel)
+        begin_epoch = checkpoint['epoch']
+        self.model.load_state_dict(checkpoint['state_dict'])
+        
+        validation_loss,confusion_matrix,_ = self.val_epoch(i, self.valLoader, self.model, self.criterion, val_logger)
+
+        confusion_matrix_file = os.path.join(self.results_directory,'epoch_{epoch}_confusion_matrix.csv'.format(epoch=i))
+        confusion_matrix.to_csv(confusion_matrix_file)
+
+    def train_epoch(self, epoch, data_loader, model, criterion, optimizer, epoch_logger, batch_logger):
         print('train at epoch {}'.format(epoch))
         model.train()
 
@@ -187,7 +203,7 @@ class ML_model():
     def val_epoch(self, epoch, data_loader, model, criterion, logger):
         print('validation at epoch {}'.format(epoch))
 
-        acc_dt = pd.DataFrame(columns = ['VideoFile', 'ProjectID', 'Correct'])
+        acc_dt = pd.DataFrame(columns = ['VideoFile', 'ProjectID', 'Prediction', 'Correct'])
 
         model.eval()
 
