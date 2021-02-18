@@ -265,11 +265,11 @@ class ML_model():
                     acc=accuracies))
             #########  temp line, needs to be removed##################################
             # print(confusion_matrix)
-        pdb.set_trace()
         confusion_matrix = pd.DataFrame(confusion_matrix)
             # confusion_matrix.to_csv(file)
         confidence_matrix = pd.DataFrame.from_dict(confidence_for_each_validation, orient='index')
-        
+
+        pdb.set_trace()
         acc_dt['Predictions'] = acc_dt.Predictions.apply(self.trainData.target_transform.__getitem__)
         acc_dt[['VideoFile','ProjectID','Predictions','Confidence']].to_csv(os.path.join(self.results_directory, 'predictions_{}.csv'.format(epoch)), sep = ',')
         acc_dt = acc_dt.groupby('ProjectID').agg({'Correct':['sum','count']}).reset_index()
